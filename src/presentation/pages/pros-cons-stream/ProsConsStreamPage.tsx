@@ -27,7 +27,7 @@ export const ProsConsStreamPage = () => {// Basado en ChatTemplate
     isRunning.current = true;
     setMessages((prevMessagesValue) => [...prevMessagesValue, {text: text, isGpt: false}]);
 
-    // TODO: UseCase
+
 
     const stream = prosConsStreamGeneratorUseCase(text, abortController.current.signal);// solo mandamos la señal del objeto abortController
     setIsLoading(false);
