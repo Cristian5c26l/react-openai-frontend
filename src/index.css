@@ -125,6 +125,7 @@ Estilo del track (el área en la que la barra de desplazamiento se mueve)
   @apply bg-[#444];
 }
 
+
 /* Animations */
 
 .fade-in { animation: fadeIn .3s; }

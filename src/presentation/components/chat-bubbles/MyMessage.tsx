@@ -10,7 +10,7 @@ interface Props {
             C
           </div>
           <div className="relative mr-3 text-sm bg-indigo-700 py-2 px-4 shadow rounded-xl">
-            <div>{ text }</div>
+            <div className="whitespace-pre-wrap">{ text }</div>{/**whitespace-pre-wrap permite que los caracteres \n contenidos en text sean reconocidos en HTML */}
           </div>
         </div>
       </div>

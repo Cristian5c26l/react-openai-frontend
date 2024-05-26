@@ -1,4 +1,4 @@
-import React, { FormEvent, useRef, useState } from 'react'
+import React, { FormEvent, useEffect, useRef, useState } from 'react'
 
 interface Props {
     onSendMessage: (message: string, selectedOption: string) => void;
@@ -16,6 +16,7 @@ interface Option {
 export const TextMessageBoxSelect = ({onSendMessage, placeholder, disableCorrections = false, options, openAIIsRunning = false}: Props) => {
 
     const formRef = useRef<HTMLFormElement>(null); // Crear una referencia al formulario
+    // const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
     const [message, setMessage] = useState('');
     const [selectedOption, setSelectedOption] = useState<string>('');
@@ -24,21 +25,37 @@ export const TextMessageBoxSelect = ({onSendMessage, placeholder, disableCorrect
         event.preventDefault(); // Evitar la propagación del formulario
 
         if ( openAIIsRunning ) {
-            onSendMessage( message, selectedOption  );
+            onSendMessage( message, selectedOption  );// hace refencia a handlePost de TranslatePage o TextToAudioPage
             return;
         }
 
         if ( message.trim().length === 0 ) return;
         if ( selectedOption === '' ) return;
 
+        console.log(`Mensaje a enviar: ${message}`);
+
         onSendMessage( message, selectedOption  );
         setMessage('');
 
     }
 
+    // useEffect(() => {
+    //     if ( !textAreaRef.current ) return;
+
+    //     console.log(message);
+        
+    //     // if ( message.trim().length === 0 ) {
+    //     //     textAreaRef.current.setSelectionRange(0, 0);// Establece el cursor al principio del textarea
+    //     //     textAreaRef.current.blur();// Quitar el foco del textarea
+    //     //     textAreaRef.current.focus();// Colocar el foco del textarea
+    //     // }
+    // }, [message]);
+    
+
 
     // w-full es para ocupar todo el ancho posible. px-4 es para dar un padding de 4 en el eje x,
   return (
+    
     <form
         ref={formRef}
         onSubmit={ handleMessage }
@@ -66,7 +83,7 @@ export const TextMessageBoxSelect = ({onSendMessage, placeholder, disableCorrect
                 <textarea 
                     autoFocus
                     name='message'
-                    className='w-full rounded-xl focus:outline-none pl-4 h-10 resize-none text-area-translate-page p-2'
+                    className='w-full rounded-xl focus:outline-none pl-4 h-10 max-h-20 resize-none text-area-translate-page p-2'
                     placeholder={placeholder}
                     autoComplete={disableCorrections ? 'on': 'off'}
                     autoCorrect={disableCorrections ? 'on': 'off'}
@@ -75,13 +92,14 @@ export const TextMessageBoxSelect = ({onSendMessage, placeholder, disableCorrect
                     onChange={e => setMessage(e.target.value)}
                     onKeyDown={(e) => {
                         if (e.key === 'Enter' && !e.shiftKey) { // Verifica si se presionó Enter sin Shift
+                            e.preventDefault(); // Evita que se inserte el carácter de nueva línea en el textarea. Y esto permite al mismo tiempo que la cadena vacia establecida con setMessage('') funcione de manera normal evitando problemas por el caracter de nueva linea (\n) mencionado al principio
                             if ( formRef.current ) {
                                 formRef.current.requestSubmit();
                             }
                         }
                     }}
                     disabled={openAIIsRunning}
-                />
+                ></textarea>
 
                 <select 
                     name="select"
