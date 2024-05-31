@@ -1,7 +1,7 @@
 import React, { FormEvent, useRef, useState } from 'react'
 
 interface Props {
-    onSendMessage: (message: string) => void;
+    onSendMessage: (message: string, file: File) => void;// se pone file en lugar de audioFile porque componente TextMessageBoxFile trabaja con archivos que se le indique con "accept"
     placeholder?: string;
     disableCorrections?: boolean;
     accept?: string; // image/* o pdf/* o application/*
@@ -17,10 +17,12 @@ export const TextMessageBoxFile = ({onSendMessage, placeholder, disableCorrectio
     const handleMessage = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault(); // Evitar la propagación del formulario
 
-        if ( message.trim().length === 0 ) return;
+        // if ( message.trim().length === 0 ) return; // message = text = prompt. El prompt es opcional
+        if (!selectedFile) return;
 
-        onSendMessage( message );
+        onSendMessage( message, selectedFile );
         setMessage('');
+        setSelectedFile(null);
 
     }
 
